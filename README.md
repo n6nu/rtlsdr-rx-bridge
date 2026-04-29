@@ -17,9 +17,15 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ---
 
-## Latest beta — v0.99.0
+## Latest beta — v0.99.1
 
-Download: **[rtlsdr-rx-bridge-0.99.0-setup.exe](rtlsdr-rx-bridge-0.99.0-setup.exe)**
+Download: **[rtlsdr-rx-bridge-0.99.1-setup.exe](rtlsdr-rx-bridge-0.99.1-setup.exe)**
+
+What's new in v0.99.1: **auto direct-sampling switch** — Settings →
+checkbox "Auto: Q-channel below 25 MHz" makes the bridge flip between
+Q-channel direct-sampling (HF) and standard quadrature (VHF/UHF) on
+its own as the WSJT-X dial moves. Off by default; CLI flag
+`--direct-sampling-auto`.
 
 Full per-version notes, system requirements and known limitations
 are in [`RELEASE_NOTES.md`](RELEASE_NOTES.md).

@@ -1,5 +1,17 @@
 # RTL-SDR RX Bridge — Release Notes
 
+## v0.99.1 — beta (2026-04-29)
+
+- **Auto direct-sampling switch** (tester request). Settings → new
+  checkbox **"Auto: Q-channel below 25 MHz"** above the existing
+  Direct-sampling combo. When enabled, the bridge automatically flips
+  the dongle into Q-channel direct-sampling mode whenever the WSJT-X
+  dial drops below 25 MHz, and back to standard quadrature mode at
+  25 MHz and above. The manual combo greys out while auto is active.
+  Off by default — existing v0.99.0 INIs come up unchanged after
+  upgrade. CLI flag: `--direct-sampling-auto`.
+- Persisted INI key: `rtlsdr/direct_sampling_auto` (bool).
+
 ## v0.99.0 — first beta (2026-04-28)
 
 ### Known issues in this build
