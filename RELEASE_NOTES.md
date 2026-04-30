@@ -1,5 +1,30 @@
 # RTL-SDR RX Bridge — Release Notes
 
+## v0.99.2 — beta (2026-04-30)
+
+Feature-parity release with the SDRplay sibling, plus shared GUI code
+via Phase 1b refactor.
+
+- **Transverter offset** for IF-transverter / upconverter setups. New
+  Settings → "Transverter offset" field (signed MHz). The SDR is tuned
+  to *(WSJT-X dial + offset)* while the GUI, WSJT-X, QMAP, and the
+  LinradServer header all keep showing the operating dial.
+  CLI: `--transverter-offset <MHz>`. INI key:
+  `radio/transverter_offset_hz`.
+- **Manual SDR frequency override.** Settings checkbox + freq field;
+  decouples the bridge from the WSJT-X dial for QMAP-priority
+  observation. WSJT-X narrowband decode only works when WSJT-X dial =
+  manual freq. CLI: `--manual-freq <MHz>`. INI keys:
+  `radio/manual_freq_override`, `radio/manual_freq_hz`.
+- **Periodic streaming-stats log line** every 5 seconds.
+- **Frequency display sourced from the bridge's actual operating freq**
+  — populates correctly at startup before WSJT-X broadcasts.
+- **High-contrast IF readout** under the dial display when transverter
+  offset is non-zero.
+- **Phase 1b refactor**: `RxMainWindow` and `RxSettingsDialog` now
+  live in `bridge-core/` and are shared with the HackRF and SDRplay
+  sibling apps.
+
 ## v0.99.1 — beta (2026-04-29)
 
 - **Auto direct-sampling switch** (tester request). Settings → new

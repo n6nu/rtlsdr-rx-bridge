@@ -17,18 +17,30 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ---
 
-## Latest beta — v0.99.1
+## Latest beta — v0.99.2
 
-Download: **[rtlsdr-rx-bridge-0.99.1-setup.exe](rtlsdr-rx-bridge-0.99.1-setup.exe)**
+Download: **[rtlsdr-rx-bridge-0.99.2-setup.exe](rtlsdr-rx-bridge-0.99.2-setup.exe)**
 
-What's new in v0.99.1: **auto direct-sampling switch** — Settings →
-checkbox "Auto: Q-channel below 25 MHz" makes the bridge flip between
-Q-channel direct-sampling (HF) and standard quadrature (VHF/UHF) on
-its own as the WSJT-X dial moves. Off by default; CLI flag
-`--direct-sampling-auto`.
+What's new in v0.99.2 — feature parity with the SDRplay sibling:
 
-Full per-version notes, system requirements and known limitations
-are in [`RELEASE_NOTES.md`](RELEASE_NOTES.md).
+- **Transverter offset** for IF-transverter / Ham-It-Up upconverter
+  setups. Settings → "Transverter offset" field (signed MHz). The
+  RTL-SDR tunes to *(WSJT-X dial + offset)* while the GUI, WSJT-X,
+  and QMAP all keep showing the operating dial.
+  CLI: `--transverter-offset <MHz>`.
+- **Manual SDR frequency override.** Settings checkbox + freq field;
+  decouples the bridge from the WSJT-X dial. Useful for QMAP-priority
+  observation when activity spans more than 90 kHz around the dial.
+  CLI: `--manual-freq <MHz>`.
+- **Periodic streaming-stats log line** every 5 seconds.
+- **Frequency display sourced from the bridge's actual operating
+  freq** — populates correctly at startup before WSJT-X broadcasts.
+- **High-contrast IF readout** under the dial display when transverter
+  offset is non-zero.
+- **Phase 1b refactor**: GUI classes now shared with the HackRF and
+  SDRplay sibling apps via `bridge-core/`.
+
+Full per-version notes are in [`RELEASE_NOTES.md`](RELEASE_NOTES.md).
 
 ### Known issue in this build
 
