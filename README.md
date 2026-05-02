@@ -17,12 +17,31 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ---
 
-## Latest beta — v0.99.7
+## Latest beta — v0.99.8
 
 | Variant | Download |
 |---|---|
-| **Windows 10 / 11** (installer) | **[rtlsdr-rx-bridge-0.99.7-setup.exe](rtlsdr-rx-bridge-0.99.7-setup.exe)** |
-| **Windows 7** (portable zip) | **[rtlsdr-rx-bridge-0.99.7-win7.zip](rtlsdr-rx-bridge-0.99.7-win7.zip)** |
+| **Windows 10 / 11** (installer) | **[rtlsdr-rx-bridge-0.99.8-setup.exe](rtlsdr-rx-bridge-0.99.8-setup.exe)** |
+
+What's new in v0.99.8 — multi-instance support (multi-band ops):
+
+- Run **two (or more) bridges side-by-side** for multi-band setups —
+  e.g. two RTL-SDRs, one feeding a 2 m WSJT-X+QMAP pair and one
+  feeding a 70 cm pair. Each bridge instance gets its own INI file,
+  its own dongle, its own VB-Cable line, its own WSJT-X UDP port,
+  and its own Linrad TCP / UDP ports — no shared state.
+- New `--instance <name>` CLI flag namespaces the INI under
+  `%APPDATA%\Roaming\n6nu\RTL-SDR RX Bridge - <name>.ini`.
+- New **Settings → "Linrad TCP port"** / **"Linrad UDP port"** rows
+  (defaults 49812 / 50004). Increment per bridge / QMAP pair.
+- New `--device-index <n>` flag + `rtlsdr/device_index` INI key for
+  picking which dongle this instance opens.
+- Window title now shows the instance name so two side-by-side
+  bridges are easy to tell apart in alt-tab and on the taskbar.
+- See RELEASE_NOTES.md for the full step-by-step multi-instance
+  workflow.
+
+The Windows 7 portable zip will follow in a separate update.
 
 What's new in v0.99.7 — installer bug-fix:
 

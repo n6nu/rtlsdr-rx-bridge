@@ -1,5 +1,57 @@
 # RTL-SDR RX Bridge — Release Notes
 
+## v0.99.8 — multi-instance support (multi-band ops) (2026-05-02)
+
+Run two (or more) bridges side-by-side — different dongles, different
+WSJT-X instances, different QMAP instances — without their settings
+clobbering each other. Concrete use case: two RTL-SDRs feeding two
+WSJT-X / QMAP pairs on 2304 / 2320 MHz subbands.
+
+- New `--instance <name>` CLI flag. When set, the INI file, window
+  title, and taskbar entry are namespaced. Two desktop shortcuts:
+
+  ```
+  "C:\Program Files\RTL-SDR RX Bridge\rtlsdr-rx-bridge.exe" --instance 2304
+  "C:\Program Files\RTL-SDR RX Bridge\rtlsdr-rx-bridge.exe" --instance 2320
+  ```
+
+  produce two independent INIs (`RTL-SDR RX Bridge - 2304.ini` and
+  `RTL-SDR RX Bridge - 2320.ini`) under `%APPDATA%\Roaming\n6nu\`.
+  Default-instance launches (no flag) keep the existing
+  `RTL-SDR RX Bridge.ini` unchanged.
+- New **Settings → "Linrad TCP port"** and **"Linrad UDP port"**
+  spinboxes. Defaults still 49812 / 50004. For multi-instance
+  setups, increment per bridge (49813/50005, 49814/50006, …) so
+  two QMAPs can talk to two bridges on the same machine. CLI:
+  `--linrad-tcp-port`, `--linrad-udp-port`. INI keys:
+  `linrad/tcp_port`, `linrad/udp_port`. Linrad ports take effect on
+  the next launch.
+- New **`--device-index <n>`** CLI flag plus `rtlsdr/device_index`
+  INI key for picking which RTL-SDR dongle this instance opens when
+  multiple are plugged in (0 = first found, 1 = second, …).
+- Bridge-core change — same multi-instance / Linrad-port rows ship
+  in all RX-only sibling apps (HackRF / SDRplay / AirSpy /
+  Malachite) at v0.99.4 / v1.0.3 / v0.99.2 / v0.99.1.
+
+**Multi-instance workflow (2× RTL-SDR, 2× WSJT-X, 2× QMAP):**
+
+1. Plug in dongle A (index 0) and dongle B (index 1).
+2. Launch WSJT-X #1 on 2 m, UDP Server port = 2237. Launch
+   WSJT-X #2 on 70 cm, UDP Server port = 2238.
+3. Launch QMAP #1 listening on UDP 50004; QMAP #2 on UDP 50005.
+4. First bridge shortcut: `--instance 2m`. Open Settings → dongle
+   index 0, audio = VB-Cable Line 1, WSJT-X port 2237, Linrad
+   TCP 49812, Linrad UDP 50004.
+5. Second bridge shortcut: `--instance 70cm`. Settings → dongle
+   index 1, audio = VB-Cable Line 2, WSJT-X port 2238, Linrad
+   TCP 49813, Linrad UDP 50005.
+
+Both bridges run independently. Window titles include the instance
+name so they're easy to tell apart in alt-tab and on the taskbar.
+
+Drop-in upgrade from v0.99.7. Existing single-instance INIs continue
+to work unchanged.
+
 ## v0.99.7 — installer bug-fix: Zadig actually launches now (2026-05-02)
 
 The optional **"Install RTL-SDR USB driver (WinUSB via Zadig)"** task in
@@ -245,12 +297,8 @@ in a strong-RF environment, a HackRF RX bridge will outperform it.
 
 ### Installation note (read first)
 
-The installer is **not code-signed** and is **64-bit only**.
-
-- **Mainline builds:** Windows 10 / 11 x64 with Qt6
-- **`win7-qt5-legacy` branch target:** Windows 7 x64 with Qt 5.15.x
-
-On first launch on a fresh Windows machine you
+The installer is **not code-signed** and is **64-bit only**
+(Windows 10 / 11 x64). On first launch on a fresh Windows machine you
 will see Microsoft Defender SmartScreen warn:
 
 > Windows protected your PC.
