@@ -17,7 +17,7 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ---
 
-## Latest release — v1.0.0 (first stable)
+## Latest release — v1.0.0 (stable)
 
 | Variant | Download |
 |---|---|

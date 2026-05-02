@@ -1,6 +1,6 @@
 # RTL-SDR RX Bridge — Release Notes
 
-## v1.0.0 — first stable (2026-05-02)
+## v1.0.0 — stable (2026-05-02)
 
 Promoted out of beta. RX-only RTL-SDR observer for QMAP wideband
 Q65 + WSJT-X RX audio has been verified end-to-end on 2 m and
