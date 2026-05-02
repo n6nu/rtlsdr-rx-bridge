@@ -17,13 +17,23 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ---
 
-## Latest beta — v0.99.8
+## Latest release — v1.0.0 (first stable)
 
 | Variant | Download |
 |---|---|
-| **Windows 10 / 11** (installer) | **[rtlsdr-rx-bridge-0.99.8-setup.exe](rtlsdr-rx-bridge-0.99.8-setup.exe)** |
+| **Windows 10 / 11** (installer) | **[rtlsdr-rx-bridge-1.0.0-setup.exe](rtlsdr-rx-bridge-1.0.0-setup.exe)** |
 
-What's new in v0.99.8 — multi-instance support (multi-band ops):
+Promoted out of beta. Verified end-to-end on 2 m and 70 cm with
+multiple RTL-SDR dongles. Cumulative since v0.99.8 adds the
+bridge-core waterfall span fix (display labels now match the
+real IQ rate).
+
+A Win7 portable zip will follow when a tester asks; the v0.99.7
+Win7 build remains in this repo's git history for now.
+
+---
+
+### v0.99.8 — Multi-instance support (multi-band ops)
 
 - Run **two (or more) bridges side-by-side** for multi-band setups —
   e.g. two RTL-SDRs, one feeding a 2 m WSJT-X+QMAP pair and one

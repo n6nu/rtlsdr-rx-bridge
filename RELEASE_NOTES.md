@@ -1,5 +1,20 @@
 # RTL-SDR RX Bridge — Release Notes
 
+## v1.0.0 — first stable (2026-05-02)
+
+Promoted out of beta. RX-only RTL-SDR observer for QMAP wideband
+Q65 + WSJT-X RX audio has been verified end-to-end on 2 m and
+70 cm with multiple dongles. The 0.99.x line ends here; future
+development opens a 1.x series.
+
+Cumulative since v0.99.8:
+
+- **Waterfall span now matches the actual IQ rate** (bridge-core
+  fix). Display labels follow the real sample rate instead of the
+  hardcoded 2 MHz default.
+
+No INI / migration changes; v1.0.0 is a drop-in upgrade from v0.99.8.
+
 ## v0.99.8 — multi-instance support (multi-band ops) (2026-05-02)
 
 Run two (or more) bridges side-by-side — different dongles, different
