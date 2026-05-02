@@ -17,12 +17,22 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ---
 
-## Latest beta — v0.99.5
+## Latest beta — v0.99.6
 
 | Variant | Download |
 |---|---|
-| **Windows 10 / 11** (installer) | **[rtlsdr-rx-bridge-0.99.5-setup.exe](rtlsdr-rx-bridge-0.99.5-setup.exe)** |
-| **Windows 7** (portable zip) | **[rtlsdr-rx-bridge-0.99.5-win7.zip](rtlsdr-rx-bridge-0.99.5-win7.zip)** |
+| **Windows 10 / 11** (installer) | **[rtlsdr-rx-bridge-0.99.6-setup.exe](rtlsdr-rx-bridge-0.99.6-setup.exe)** |
+| **Windows 7** (portable zip) | **[rtlsdr-rx-bridge-0.99.6-win7.zip](rtlsdr-rx-bridge-0.99.6-win7.zip)** |
+
+What's new in v0.99.6 — multi-instance / multi-band feature:
+
+- **Configurable WSJT-X UDP listener port** for multi-band ops. New
+  Settings → "WSJT-X UDP port" spin box (1024–65535, default 2237).
+  Run a second WSJT-X instance on port 2238 (3rd on 2239, …) and
+  point a second bridge at it — each bridge feeds its own QMAP
+  instance. Persisted to INI (`wsjtx/udp_port`); the bridge
+  re-binds the socket immediately on Apply, no app restart needed.
+  CLI flag `--wsjtx-port` honors the INI default for fresh launches.
 
 What's new in v0.99.5 — bug-fix release:
 

@@ -1,5 +1,35 @@
 # RTL-SDR RX Bridge — Release Notes
 
+## v0.99.6 — configurable WSJT-X UDP port (multi-instance ops) (2026-05-02)
+
+Tester request: support multi-band setups where multiple WSJT-X
+instances run on different UDP ports (2237, 2238, 2239 …) and each
+bridge instance follows the matching one. The `--wsjtx-port <port>`
+CLI flag already supported this on launch; v0.99.6 adds a GUI
+control + persistence + live re-bind without restart.
+
+- New **Settings → "WSJT-X UDP port"** spin box (1024–65535, default
+  2237). Persisted to INI key `wsjtx/udp_port`.
+- The bridge re-binds the UDP socket immediately on Apply when the
+  value changes — no app restart needed. Log line confirms:
+  `[Settings] WSJT-X UDP port: 2237 → 2238 (re-binding)`.
+- The CLI flag `--wsjtx-port` now defaults to the INI-stored value
+  (still 2237 for fresh installs), so a port set via Settings is
+  honored on subsequent CLI launches too.
+- Bridge-core change — same Settings row appears in all RX-only
+  sibling apps (HackRF / SDRplay / AirSpy / Malachite) at their
+  next version bump.
+
+**Multi-band workflow:**
+
+1. WSJT-X #1 → Reporting → UDP Server port = 2237 (default), 2 m.
+2. WSJT-X #2 → Reporting → UDP Server port = 2238, 70 cm.
+3. First bridge instance (default) follows WSJT-X #1.
+4. Second bridge instance: Settings → WSJT-X UDP port = 2238 →
+   Apply. Each bridge feeds its own QMAP instance.
+
+Drop-in upgrade from v0.99.5.
+
 ## v0.99.5 — fix "fuzzy" int16 stereo audio (Win7 / Qt5) (2026-05-02)
 
 Tester report against the Win7 v0.99.4 build: WSJT-X RX audio sounded
@@ -194,8 +224,12 @@ in a strong-RF environment, a HackRF RX bridge will outperform it.
 
 ### Installation note (read first)
 
-The installer is **not code-signed** and is **64-bit only**
-(Windows 10 / 11 x64). On first launch on a fresh Windows machine you
+The installer is **not code-signed** and is **64-bit only**.
+
+- **Mainline builds:** Windows 10 / 11 x64 with Qt6
+- **`win7-qt5-legacy` branch target:** Windows 7 x64 with Qt 5.15.x
+
+On first launch on a fresh Windows machine you
 will see Microsoft Defender SmartScreen warn:
 
 > Windows protected your PC.
