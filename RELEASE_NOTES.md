@@ -1,5 +1,34 @@
 # RTL-SDR RX Bridge — Release Notes
 
+## v0.99.5 — fix "fuzzy" int16 stereo audio (Win7 / Qt5) (2026-05-02)
+
+Tester report against the Win7 v0.99.4 build: WSJT-X RX audio sounded
+"fuzzy" (distorted, with a hash overlay on the wanted signal); the
+QMAP UDP wideband path was clean. Same setup on Win11 was clean.
+
+**Root cause** in `bridge-core/QtAudioBridge.cpp`'s int16 output
+branch: the loop only wrote one `int16_t` per audio frame even when
+the device negotiated **int16 stereo** (2-channel). The audio buffer
+was `Qt::Uninitialized`-allocated and only half-filled — every other
+sample slot was uninitialised memory streaming directly into the
+audio device.
+
+**Why the bug only surfaced on Win7 / Qt5**: VB-Audio Virtual Cable
+on Win7 reports its preferred audio format as `int16 stereo`, so the
+bridge's format-negotiation accepted that and the broken int16 branch
+ran. On Win11 / Qt6, the same VB-Cable reports `float stereo` as
+preferred — the bridge accepted that instead, and the (correct)
+float branch wrote both channels, dodging the bug entirely.
+
+**Fix**: the int16 branch now fills every channel with the same mono
+signal, exactly like the float branch does. This is a `bridge-core`
+fix — every sibling app (HackRF / RTL-SDR / SDRplay / AirSpy /
+Malachite) benefits any time it lands on int16 stereo output. On Qt6
+builds where the device prefers float, the behaviour is unchanged.
+
+Drop-in upgrade from v0.99.4. Win11 audio is unchanged (was correct
+already).
+
 ## v0.99.4 — Settings → Reset frequency defaults + apply() leak fix (2026-05-02)
 
 Tester report against v0.99.3: "the PLL of the RTL-SDR doesn't lock

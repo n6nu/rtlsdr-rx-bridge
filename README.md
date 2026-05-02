@@ -17,9 +17,23 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ---
 
-## Latest beta — v0.99.4
+## Latest beta — v0.99.5
 
-Download: **[rtlsdr-rx-bridge-0.99.4-setup.exe](rtlsdr-rx-bridge-0.99.4-setup.exe)**
+| Variant | Download |
+|---|---|
+| **Windows 10 / 11** (installer) | **[rtlsdr-rx-bridge-0.99.5-setup.exe](rtlsdr-rx-bridge-0.99.5-setup.exe)** |
+| **Windows 7** (portable zip) | **[rtlsdr-rx-bridge-0.99.5-win7.zip](rtlsdr-rx-bridge-0.99.5-win7.zip)** |
+
+What's new in v0.99.5 — bug-fix release:
+
+- **Fix "fuzzy" WSJT-X RX audio on Windows 7 / Qt5 builds.** The
+  audio path was filling only one channel of the stereo VB-Cable
+  buffer when the device negotiated int16 stereo (which is what
+  VB-Cable on Win7 / Qt5 prefers). The other channel was
+  uninitialised memory — that's the hash overlay testers heard.
+  Win11 / Qt6 was unaffected (device prefers float stereo, hits
+  a different code path that already handled stereo correctly).
+  QMAP UDP wideband path was clean on both.
 
 What's new in v0.99.4 — bug-fix release:
 
