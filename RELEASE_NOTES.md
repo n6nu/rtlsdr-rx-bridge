@@ -1,5 +1,40 @@
 # RTL-SDR RX Bridge — Release Notes
 
+## v0.99.4 — Settings → Reset frequency defaults + apply() leak fix (2026-05-02)
+
+Tester report against v0.99.3: "the PLL of the RTL-SDR doesn't lock
+properly; the bridge displays at startup the freq that's in 'Manual
+SDR frequency' even though the checkbox isn't ticked."
+
+Two fixes shipped together:
+
+- **`Settings → "Reset frequency settings to defaults…"` button.**
+  Clears `radio/manual_freq_override`, `radio/manual_freq_hz`, and
+  `radio/transverter_offset_hz`, retunes the SDR to the current
+  WSJT-X dial (or the persisted dial if WSJT-X hasn't been heard
+  yet). User-recourse for testers who end up with stale freq state
+  in their INI from earlier experiments — typically a manual
+  override left enabled, or a non-zero transverter offset they've
+  forgotten about. Radio-specific settings (gain, AGC, bias-T,
+  notches, antenna, direct sampling, PPM) are NOT touched.
+- **`Settings → Apply` no longer accumulates stale `manual_freq_hz`
+  values.** Previously, every Apply wrote whatever was in the
+  manual-freq spin box to `radio/manual_freq_hz`, regardless of
+  whether the override checkbox was ticked. The spin box prefilled
+  with the current operating freq when no manual was saved, so
+  even a no-op Apply landed a value in INI — the runtime
+  conditional masked it (override was off so the value was
+  ignored), but on the next Settings open the spin box would
+  display the stale value, looking like a bug. v0.99.4 only writes
+  `manual_freq_hz` to INI when override is actually on, and
+  removes the key when override is off.
+
+If you've been running v0.99.2 or v0.99.3 and the bridge feels
+"stuck" at a wrong frequency, click the new Reset button once.
+You don't need to delete the INI by hand.
+
+Drop-in upgrade from v0.99.3.
+
 ## v0.99.3 — spectrum waterfall toggle (2026-05-02)
 
 The built-in spectrum / waterfall display can now be turned off from
