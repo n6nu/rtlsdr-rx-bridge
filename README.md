@@ -17,9 +17,9 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ---
 
-## Latest beta — v0.99.2
+## Latest beta — v0.99.3
 
-Download: **[rtlsdr-rx-bridge-0.99.2-setup.exe](rtlsdr-rx-bridge-0.99.2-setup.exe)**
+Download: **[rtlsdr-rx-bridge-0.99.3-setup.exe](rtlsdr-rx-bridge-0.99.3-setup.exe)**
 
 What's new in v0.99.2 — feature parity with the SDRplay sibling:
 
