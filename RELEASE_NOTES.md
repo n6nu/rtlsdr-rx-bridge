@@ -1,5 +1,26 @@
 # RTL-SDR RX Bridge — Release Notes
 
+## v0.99.7 — installer bug-fix: Zadig actually launches now (2026-05-02)
+
+The optional **"Install RTL-SDR USB driver (WinUSB via Zadig)"** task in
+the v0.99.6 (and earlier) installer never actually ran Zadig. The
+`zadig.exe` payload was bundled inside `setup.exe` but never extracted
+to disk during install, so the `[Run]` entry that was supposed to
+launch it was silently a no-op (the entry's `skipifdoesntexist` flag
+hid the missing-file error). Symptom: fresh installs without a
+pre-existing WinUSB binding produced "RTL not found" at bridge launch.
+
+The bug was an Inno Setup `dontcopy` flag on the `zadig.exe` source
+line — that flag suppresses automatic extraction. v0.99.7 removes
+the flag so Zadig is extracted to `{tmp}` for the duration of the
+install (and cleaned up after).
+
+**No code changes** — only the installer is different. If you
+already manually ran Zadig on v0.99.6 and have a working WinUSB
+binding, you can skip this update.
+
+Drop-in upgrade from v0.99.6.
+
 ## v0.99.6 — configurable WSJT-X UDP port (multi-instance ops) (2026-05-02)
 
 Tester request: support multi-band setups where multiple WSJT-X

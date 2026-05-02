@@ -17,12 +17,26 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ---
 
-## Latest beta — v0.99.6
+## Latest beta — v0.99.7
 
 | Variant | Download |
 |---|---|
-| **Windows 10 / 11** (installer) | **[rtlsdr-rx-bridge-0.99.6-setup.exe](rtlsdr-rx-bridge-0.99.6-setup.exe)** |
-| **Windows 7** (portable zip) | **[rtlsdr-rx-bridge-0.99.6-win7.zip](rtlsdr-rx-bridge-0.99.6-win7.zip)** |
+| **Windows 10 / 11** (installer) | **[rtlsdr-rx-bridge-0.99.7-setup.exe](rtlsdr-rx-bridge-0.99.7-setup.exe)** |
+| **Windows 7** (portable zip) | **[rtlsdr-rx-bridge-0.99.7-win7.zip](rtlsdr-rx-bridge-0.99.7-win7.zip)** |
+
+What's new in v0.99.7 — installer bug-fix:
+
+- The optional **"Install RTL-SDR USB driver (WinUSB via Zadig)"**
+  task in the v0.99.6 (and earlier) installer never actually
+  launched Zadig — the bundled `zadig.exe` was in the installer
+  but a stray `dontcopy` flag prevented it from being extracted
+  to `{tmp}` during install, and the `[Run]` entry that was
+  supposed to launch it failed silently. Symptom: fresh installs
+  without a pre-existing WinUSB binding came up with **"RTL not
+  found"** at bridge launch. v0.99.7 removes the `dontcopy` flag
+  so the install-time Zadig step actually runs. **No code
+  changes** — if you already manually ran Zadig on v0.99.6 and
+  have a working binding, you can skip this update.
 
 What's new in v0.99.6 — multi-instance / multi-band feature:
 
