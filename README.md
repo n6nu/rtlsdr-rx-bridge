@@ -17,16 +17,32 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ---
 
-## Latest release — v1.0.0 (stable)
+## Latest release — v1.0.1
 
 | Variant | Download |
 |---|---|
-| **Windows 10 / 11** (installer) | **[rtlsdr-rx-bridge-1.0.0-setup.exe](rtlsdr-rx-bridge-1.0.0-setup.exe)** |
+| **Windows 10 / 11** (installer) | **[rtlsdr-rx-bridge-1.0.1-setup.exe](rtlsdr-rx-bridge-1.0.1-setup.exe)** |
 
-Promoted out of beta. Verified end-to-end on 2 m and 70 cm with
-multiple RTL-SDR dongles. Cumulative since v0.99.8 adds the
-bridge-core waterfall span fix (display labels now match the
-real IQ rate).
+**rigctld-compatible CAT server for WSJT-X Doppler tracking.** The
+bridge can now BE the radio that WSJT-X talks CAT to. Set WSJT-X
+**Rig = Hamlib NET rigctl**, **Network Server = `127.0.0.1:4535`**,
+turn on Doppler tracking — bridge tunes the RTL-SDR to the corrected
+frequency end-to-end.
+
+- Default **OFF** so the bridge stays out of the way for the common
+  case (WSJT-X driving a real radio while this bridge follows the
+  dial via UDP). Enable in **Settings → CAT server** (checkbox +
+  port). Restart bridge to take effect.
+- **Auto-detect UDP mute**: when a CAT client is actually connected
+  the UDP path is silenced; when no CAT client is connected the
+  bridge falls back to UDP cleanly. Leaving CAT enabled never makes
+  the bridge "deaf".
+- **Live source indicator in the window title** (`— UDP` / `— UDP
+  (CAT idle)` / `— CAT (n)`), updated every second.
+- Default port 4535 — co-exists with pluto-rx-bridge (4534),
+  hackrf-wsjtx-bridge (4533), and a real Hamlib rigctld (4532).
+
+Drop-in upgrade from v1.0.0.
 
 A Win7 portable zip will follow when a tester asks; the v0.99.7
 Win7 build remains in this repo's git history for now.

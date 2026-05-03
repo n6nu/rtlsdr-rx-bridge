@@ -1,5 +1,36 @@
 # RTL-SDR RX Bridge — Release Notes
 
+## v1.0.1 — rigctld CAT server for WSJT-X Doppler tracking (2026-05-03)
+
+Adds the same opt-in CAT server pattern that landed in pluto-rx-bridge.
+With WSJT-X **Rig = Hamlib NET rigctl** pointed at the bridge port,
+Doppler tracking commands corrected frequency directly to the bridge —
+RTL-SDR follows, QMAP centre freq follows.
+
+- New rigctld-compatible TCP server on port **4535** (configurable).
+  Picked so RTL-SDR co-exists with pluto-rx-bridge (4534),
+  hackrf-wsjtx-bridge (4533), and a real Hamlib rigctld (4532) on
+  the same machine.
+- **Default OFF.** Common case stays "WSJT-X drives a real radio,
+  bridge follows the dial via UDP" — turning the bridge into a CAT
+  target unprompted would get in the way.
+- Toggle in **Settings dialog** under "CAT server" (checkbox + port).
+  Takes effect on next bridge launch. CLI flags `--cat` and
+  `--cat-port <n>` flip it on too.
+- **Auto-detect UDP mute.** When a CAT client is actually connected
+  the UDP path is silenced (CAT becomes the source of truth — no
+  double-driving). When no CAT client is connected, the bridge falls
+  back to UDP cleanly. So leaving CAT on doesn't accidentally make
+  the bridge deaf if WSJT-X isn't actually using rigctl.
+- **Live source indicator in window title.** Updates every second:
+  - `RTL-SDR RX Bridge v1.0.1 — UDP` (CAT off in Settings).
+  - `RTL-SDR RX Bridge v1.0.1 — UDP (CAT idle)` (CAT on, no client).
+  - `RTL-SDR RX Bridge v1.0.1 — CAT (1)` (WSJT-X connected via CAT).
+- Stats line gets a `CAT clients=N` trailer when CAT is on.
+- New INI keys: `[cat] enabled` (bool), `[cat] tcp_port` (int).
+
+Drop-in upgrade from v1.0.0.
+
 ## v1.0.0 — stable (2026-05-02)
 
 Promoted out of beta. RX-only RTL-SDR observer for QMAP wideband
