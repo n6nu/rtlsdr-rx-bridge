@@ -17,32 +17,33 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ---
 
-## Latest release — v1.0.2
+## Latest release — v1.0.2 (bridge-core CatServer fixes)
 
 | Variant | Download |
 |---|---|
 | **Windows 10 / 11** (installer) | **[rtlsdr-rx-bridge-1.0.2-setup.exe](rtlsdr-rx-bridge-1.0.2-setup.exe)** |
 
-**rigctld-compatible CAT server for WSJT-X Doppler tracking.** The
-bridge can now BE the radio that WSJT-X talks CAT to. Set WSJT-X
-**Rig = Hamlib NET rigctl**, **Network Server = `127.0.0.1:4535`**,
-turn on Doppler tracking — bridge tunes the RTL-SDR to the corrected
-frequency end-to-end.
+Picks up three bridge-core CatServer fixes from this week's
+pluto-wsjtx-bridge bring-up. **Only meaningful when CAT is opted
+in** (Settings → CAT server checkbox, or `--cat` CLI flag) for
+WSJT-X Doppler tracking. Default CAT-off, UDP-observer mode is
+unchanged.
 
-- Default **OFF** so the bridge stays out of the way for the common
-  case (WSJT-X driving a real radio while this bridge follows the
-  dial via UDP). Enable in **Settings → CAT server** (checkbox +
-  port). Restart bridge to take effect.
-- **Auto-detect UDP mute**: when a CAT client is actually connected
-  the UDP path is silenced; when no CAT client is connected the
-  bridge falls back to UDP cleanly. Leaving CAT enabled never makes
-  the bridge "deaf".
-- **Live source indicator in the window title** (`— UDP` / `— UDP
-  (CAT idle)` / `— CAT (n)`), updated every second.
-- Default port 4535 — co-exists with pluto-rx-bridge (4534),
-  hackrf-wsjtx-bridge (4533), and a real Hamlib rigctld (4532).
+- `ptt_type=0x1` in dump_state (was `0x8` `RIG_PTT_GPION`).
+- `has_set_ptt=1` / `has_get_ptt=1` / `has_set_mode=1` /
+  `has_get_mode=1` advertised in dump_state.
+- PTT value parser accepts any non-zero value (`1`/`2`/`3`) as ON,
+  not just `1` — needed for WSJT-X PKTUSB / PKTLSB modes which
+  send Hamlib PTT value `3` (DATA-PTT).
 
-Drop-in upgrade from v1.0.0.
+If you've been hitting "Test PTT clicked but bridge logged
+[CAT PTT] off" in WSJT-X data modes against v1.0.1, that was the
+bug. Drop-in upgrade. INI compatible.
+
+The original v1.0.1 rigctld CAT server feature (TCP 4535 by
+default, opt-in via Settings → CAT server, auto-detect UDP mute,
+live `— UDP` / `— UDP (CAT idle)` / `— CAT (n)` indicator in the
+window title) is unchanged — see RELEASE_NOTES.md for details.
 
 A Win7 portable zip will follow when a tester asks; the v0.99.7
 Win7 build remains in this repo's git history for now.
