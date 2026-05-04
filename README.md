@@ -17,11 +17,11 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ---
 
-## Latest release — v1.0.1
+## Latest release — v1.0.2
 
 | Variant | Download |
 |---|---|
-| **Windows 10 / 11** (installer) | **[rtlsdr-rx-bridge-1.0.1-setup.exe](rtlsdr-rx-bridge-1.0.1-setup.exe)** |
+| **Windows 10 / 11** (installer) | **[rtlsdr-rx-bridge-1.0.2-setup.exe](rtlsdr-rx-bridge-1.0.2-setup.exe)** |
 
 **rigctld-compatible CAT server for WSJT-X Doppler tracking.** The
 bridge can now BE the radio that WSJT-X talks CAT to. Set WSJT-X

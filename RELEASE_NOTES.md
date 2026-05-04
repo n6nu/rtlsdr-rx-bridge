@@ -1,16 +1,35 @@
 # RTL-SDR RX Bridge — Release Notes
 
+## v1.0.2 — bridge-core CatServer fixes (2026-05-04)
+
+Picks up three CatServer fixes from this week's
+`pluto-wsjtx-bridge` bring-up. **Only meaningful when CAT is opted
+in** (Settings → CAT server checkbox, or `--cat` CLI flag) for
+WSJT-X Doppler tracking. Default CAT-off, UDP-observer mode is
+unchanged.
+
+- `ptt_type=0x1` in `\dump_state` (was `0x8` `RIG_PTT_GPION`).
+- `has_set_ptt=1` + `has_get_ptt=1` + `has_set_mode=1` +
+  `has_get_mode=1` advertised in `dump_state`.
+- PTT value parser accepts any non-zero value as ON (was matching
+  only literal `"1"`). WSJT-X in PKTUSB / PKTLSB sends value `3`
+  (Hamlib `PTT_DATA`) which silently fell through to OFF.
+
+If you've been hitting "Test PTT clicked but bridge logged
+`[CAT PTT] off`" in WSJT-X data modes against v1.0.1, that was the
+bug. Drop-in upgrade. INI compatible. No app-level code changed.
+
 ## v1.0.1 — rigctld CAT server for WSJT-X Doppler tracking (2026-05-03)
 
 Adds the same opt-in CAT server pattern that landed in pluto-rx-bridge.
 With WSJT-X **Rig = Hamlib NET rigctl** pointed at the bridge port,
 Doppler tracking commands corrected frequency directly to the bridge —
-RTL-SDR follows, QMAP centre freq follows.
+RTL-SDR follows, QMAP center freq follows.
 
 - New rigctld-compatible TCP server on port **4535** (configurable).
-  Picked so RTL-SDR co-exists with pluto-rx-bridge (4534),
-  hackrf-wsjtx-bridge (4533), and a real Hamlib rigctld (4532) on
-  the same machine.
+  Picked so RTL-SDR co-exists with pluto-rx-bridge (4534), the full
+  hackrf-wsjtx-bridge transceiver (4533), and a real Hamlib rigctld
+  (4532) on the same machine.
 - **Default OFF.** Common case stays "WSJT-X drives a real radio,
   bridge follows the dial via UDP" — turning the bridge into a CAT
   target unprompted would get in the way.
