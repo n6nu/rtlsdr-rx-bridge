@@ -17,7 +17,19 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ---
 
-## Latest release — v1.0.2 (bridge-core CatServer fixes)
+## Latest release — v1.1.0
+
+Download: **[rtlsdr-rx-bridge-1.1.0-setup.exe](https://github.com/n6nu/rtlsdr-rx-bridge/releases/latest/download/rtlsdr-rx-bridge-1.1.0-setup.exe)**
+
+What's new in v1.1.0 (2026-05-05) -- UI refresh. Main window now
+fixed-size 400x640. Settings moved from a button to a top-level
+**Settings** menu (`Ctrl+,`). New **Linrad rate** readout in the
+State grid. Settings dialog reflowed side-by-side, with a new
+**Linrad IQ rate** combo (defaults to "96 kHz (QMAP Default)").
+Drop-in upgrade; 96 kHz wire format unchanged.
+
+---
+### Previous release — v1.0.2 (bridge-core CatServer fixes)
 
 | Variant | Download |
 |---|---|
@@ -47,8 +59,6 @@ window title) is unchanged — see RELEASE_NOTES.md for details.
 
 A Win7 portable zip will follow when a tester asks; the v0.99.7
 Win7 build remains in this repo's git history for now.
-
----
 
 ### v0.99.8 — Multi-instance support (multi-band ops)
 
