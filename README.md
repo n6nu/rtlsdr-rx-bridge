@@ -17,9 +17,27 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ---
 
-## Latest release — v1.1.5
+## Latest release — v1.1.6
 
-Download: **[rtlsdr-rx-bridge-1.1.5-setup.exe](https://github.com/n6nu/rtlsdr-rx-bridge/releases/latest/download/rtlsdr-rx-bridge-1.1.5-setup.exe)**
+Download: **[rtlsdr-rx-bridge-1.1.6-setup.exe](https://github.com/n6nu/rtlsdr-rx-bridge/releases/download/v1.1.6/rtlsdr-rx-bridge-1.1.6-setup.exe)**
+
+What's new in v1.1.6 (2026-05-12) — Tuner gain UX clarity. When
+the "Tuner auto gain" checkbox is on, the R820T2 picks its own
+gain dynamically and the Tuner gain spinbox is ignored — but the
+spinbox stayed enabled and editable, which fooled users into
+thinking the bridge wasn't applying their gain changes. v1.1.6
+greys out the spinbox live when auto-gain is on, and adds clear
+tooltips on both AGC checkboxes explaining the interaction.
+
+Recommended weak-signal config (best SNR for EME / FT8 hunting):
+Tuner gain 30 dB, Tuner auto gain OFF, RTL2832 IF AGC OFF.
+
+Drop-in upgrade from v1.1.5.
+
+---
+### Previous release — v1.1.5
+
+Download: **[rtlsdr-rx-bridge-1.1.5-setup.exe](https://github.com/n6nu/rtlsdr-rx-bridge/releases/download/v1.1.5/rtlsdr-rx-bridge-1.1.5-setup.exe)**
 
 What's new in v1.1.5 (2026-05-08) -- Quality release. New Help menu
 with User Guide (F1) opening the bundled beta-tester PDF, and

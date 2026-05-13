@@ -2,6 +2,32 @@
 
 
 
+## v1.1.6 — Tuner gain UX clarity (2026-05-12)
+
+When the "Tuner auto gain" checkbox is checked, the R820T2 picks its
+own gain dynamically and the Tuner gain spinbox value is silently
+ignored. Prior versions left the spinbox enabled, leading testers
+(KB2SA report) to edit the spinbox, click Apply, and conclude the
+bridge wasn't applying their gain changes — when in fact auto-gain
+was overriding them.
+
+Fix:
+
+- Tuner gain spinbox now greys out live when "Tuner auto gain" is
+  checked. Toggle the checkbox and watch the spinbox enable/disable
+  immediately, no Apply needed for the UI feedback.
+- Clear tooltips on both "Tuner auto gain" and "RTL2832 IF AGC"
+  explaining what each controls and that they're independent AGCs
+  that can mask manual gain settings when on.
+
+Recommended weak-signal config (matches what SDRConsole defaults to):
+
+    Tuner gain         : 30 dB (or band-appropriate)
+    Tuner auto gain    : OFF
+    RTL2832 IF AGC     : OFF
+
+INI compatible with v1.0.x / v1.1.x. Drop-in upgrade from v1.1.5.
+
 ## v1.1.5 -- Help-menu polish + LGPL compliance + bundled user guide (2026-05-08)
 
 Quality release on top of v1.1.4. No functional changes to the
