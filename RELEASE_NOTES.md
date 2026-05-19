@@ -3,6 +3,33 @@
 
 
 
+## v1.2.7 -- Linrad bandwidth selector with hot-restart + status-panel layout fix (2026-05-19)
+
+Linrad bandwidth picker in Settings (96 / 128 / 192 / 256 kHz). The
+combo is automatically clamped to the device's input rate — for a
+2.4 Msps RTL-SDR, all four options are available.
+
+On Apply the bridge hot-restarts its `LinradServer` in place — no
+process restart needed. The UDP pump pauses for 4 seconds, the
+resamplers / I-Q balancer rebuild at the new rate, and the TCP
+parameter handshake (port 49812) starts advertising the new rate
+immediately. QMAP-in-Auto sees the stream go stale, re-probes TCP on
+its next 1 Hz check, picks up the new rate, and auto-relaunches at
+the new sample rate — all without the operator restarting anything.
+
+Status-panel layout cleanup based on DL1SUZ feedback:
+  - Status font dropped from 14 pt to 12 pt (no more clipped
+    descenders on the bottom TCI row).
+  - Audio peak meter folded into the State group as a "Level:" row —
+    drops the separate "RX audio level" QGroupBox that was colliding
+    visually with the bottom of State.
+  - Gain row dropped to 9 pt so wide gain strings fit in the 400 px
+    window.
+  - Waterfall capped at 180 px with an explicit 10 px bottom margin
+    so it no longer bleeds into the window frame.
+
+No RF / decode / wire-format changes from v1.1.7. Drop-in upgrade.
+
 ## v1.1.7 -- TCP listen failure non-fatal (Win11 Hyper-V port-exclusion drop-in fix) (2026-05-15)
 
 Drop-in fix for a silent-failure bug discovered with W3SZ (Roger)
