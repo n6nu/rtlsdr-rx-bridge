@@ -17,9 +17,25 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ---
 
-## Latest release -- v1.2.7
+## Latest release -- v1.2.8
 
-Download: **[rtlsdr-rx-bridge-1.2.7-setup.exe](https://github.com/n6nu/rtlsdr-rx-bridge/releases/latest/download/rtlsdr-rx-bridge-1.2.7-setup.exe)**
+Download: **[rtlsdr-rx-bridge-1.2.8-setup.exe](https://github.com/n6nu/rtlsdr-rx-bridge/releases/latest/download/rtlsdr-rx-bridge-1.2.8-setup.exe)**
+
+What's new in v1.2.8 (2026-05-26) -- RTL-SDR live controls (every
+Settings click / spin / slider applies immediately to the running
+tuner — no Apply round-trip), auto-gain spinbox live enable/disable,
+**Linrad bandwidth combo** (96 / 128 / 192 / 256 kHz with hot-restart)
+preserved from v1.2.7 + now persisted at startup, CAT server (rigctld)
++ TCI RxAudioStream over WebSocket, CAT/TCI enable toggles + status
+indicators in Settings, Settings menu (Ctrl+,) with horizontal dialog
+layout, broadcast-friendly Linrad UDP target field, Qt6WebSockets.dll
+auto-bundled. Re-aligns with the public 1.2.x line (the internal
+v1.0.x interim never went public). Drop-in upgrade. INI compatible.
+
+---
+### Previous release — v1.2.7
+
+Download: **[rtlsdr-rx-bridge-1.2.7-setup.exe](https://github.com/n6nu/rtlsdr-rx-bridge/releases/download/v1.2.7/rtlsdr-rx-bridge-1.2.7-setup.exe)**
 
 What's new in v1.2.7 (2026-05-19) -- Linrad bandwidth selector in
 Settings (96 / 128 / 192 / 256 kHz, automatically clamped to the

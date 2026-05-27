@@ -1,191 +1,51 @@
 # RTL-SDR RX Bridge — Release Notes
 
+## v1.2.8 — RTL-SDR live controls + Linrad bandwidth combo + CAT/TCI (2026-05-26)
 
+Re-aligns the version number with the public 1.2.x release line (was
+internally renumbered to 1.0.x during a "first stable" promotion —
+that looked like a downgrade to anyone updating, and the public-facing
+release on n6nu/rtlsdr-rx-bridge stayed at v1.2.7. We're back on the
+1.2.x line.)
 
+**No regressions vs v1.2.7** — the Linrad bandwidth selector that
+shipped in v1.2.7 was on a separate code lineage; cherry-picked back
+in for this release.
 
-## v1.2.7 -- Linrad bandwidth selector with hot-restart + status-panel layout fix (2026-05-19)
+**RTL-SDR-specific:**
 
-Linrad bandwidth picker in Settings (96 / 128 / 192 / 256 kHz). The
-combo is automatically clamped to the device's input rate — for a
-2.4 Msps RTL-SDR, all four options are available.
+- **Live controls** — every Settings click / spin / slider applies
+  immediately to the running tuner. No more "click Apply" or
+  Settings-dialog round-trip to change tuner gain, AGC, IF gain.
+- **Auto-gain spinbox** — disabled live when "Tuner auto gain" is
+  on (was greyed out only at dialog open).
 
-On Apply the bridge hot-restarts its `LinradServer` in place — no
-process restart needed. The UDP pump pauses for 4 seconds, the
-resamplers / I-Q balancer rebuild at the new rate, and the TCP
-parameter handshake (port 49812) starts advertising the new rate
-immediately. QMAP-in-Auto sees the stream go stale, re-probes TCP on
-its next 1 Hz check, picks up the new rate, and auto-relaunches at
-the new sample rate — all without the operator restarting anything.
+**Linrad / wideband (from v1.2.7, cherry-picked back):**
 
-Status-panel layout cleanup based on DL1SUZ feedback:
-  - Status font dropped from 14 pt to 12 pt (no more clipped
-    descenders on the bottom TCI row).
-  - Audio peak meter folded into the State group as a "Level:" row —
-    drops the separate "RX audio level" QGroupBox that was colliding
-    visually with the bottom of State.
-  - Gain row dropped to 9 pt so wide gain strings fit in the 400 px
-    window.
-  - Waterfall capped at 180 px with an explicit 10 px bottom margin
-    so it no longer bleeds into the window frame.
+- **Linrad bandwidth combo** in Settings (96 / 128 / 192 / 256 kHz,
+  auto-clamped to the device's input rate). Hot-restarts the running
+  LinradServer in place on Apply — no bridge restart needed. QMAP
+  picks up the new rate within ~4 s.
+- Bridge honors the persisted Linrad output rate at startup.
 
-No RF / decode / wire-format changes from v1.1.7. Drop-in upgrade.
+**CAT / TCI (from v1.0.x interim):**
 
-## v1.1.7 -- TCP listen failure non-fatal (Win11 Hyper-V port-exclusion drop-in fix) (2026-05-15)
+- rigctld CAT server on TCP 4535 (opt-in, Settings → CAT server),
+  for WSJT-X Doppler tracking.
+- CatServer cascade fixes: `ptt_type=0x1`, `has_set_ptt=1` etc.
+  advertised, PTT value parser accepts non-zero (WSJT-X PKTUSB
+  sends value 3).
+- TCI RxAudioStream — SSB audio over WebSocket to remote WSJT-X.
+- CAT + TCI enable toggles + status indicators in Settings.
 
-Drop-in fix for a silent-failure bug discovered with W3SZ (Roger)
-on the SDRplay bridge (shipped there as v1.1.21). Same underlying
-shared-code bug affected every bridge in the family, so this
-release ports the fix to the other six.
+**UI / packaging:**
 
-The Linrad parameter-server TCP listen on port 49812 fails with
-WSAEACCES ("address is protected") on Win11 boxes where Hyper-V,
-WSL2, or Docker Desktop has reserved the upper ephemeral port range
-49152-65535. The previous code aborted LinradServer::start() on
-that failure, so the UDP socket was never created and QMAP saw no
-packets. QMAP doesn't actually use the Linrad TCP handshake -- only
-UDP -- so this release logs the failure (with a hint to check
-`netsh int ipv4 show excludedportrange protocol=tcp`) and continues
-in UDP-only mode.
+- Settings menu (`Ctrl+,`) replaces the Settings button — horizontal
+  dialog layout.
+- Broadcast-friendly Linrad UDP target field in Settings.
+- Qt6WebSockets.dll auto-bundled in the installer.
 
-All three sockets (Linrad TCP, CAT TCP, outgoing UDP source) also
-now bind to AnyIPv4 (0.0.0.0) explicitly rather than relying on Qt's
-dual-stack Any, which can silently pick IPv6-only on some Windows
-configs.
-
-No RF / decode / wire-format changes. Drop-in upgrade.
-
-## v1.1.6 — Tuner gain UX clarity (2026-05-12)
-
-When the "Tuner auto gain" checkbox is checked, the R820T2 picks its
-own gain dynamically and the Tuner gain spinbox value is silently
-ignored. Prior versions left the spinbox enabled, leading testers
-(KB2SA report) to edit the spinbox, click Apply, and conclude the
-bridge wasn't applying their gain changes — when in fact auto-gain
-was overriding them.
-
-Fix:
-
-- Tuner gain spinbox now greys out live when "Tuner auto gain" is
-  checked. Toggle the checkbox and watch the spinbox enable/disable
-  immediately, no Apply needed for the UI feedback.
-- Clear tooltips on both "Tuner auto gain" and "RTL2832 IF AGC"
-  explaining what each controls and that they're independent AGCs
-  that can mask manual gain settings when on.
-
-Recommended weak-signal config (matches what SDRConsole defaults to):
-
-    Tuner gain         : 30 dB (or band-appropriate)
-    Tuner auto gain    : OFF
-    RTL2832 IF AGC     : OFF
-
-INI compatible with v1.0.x / v1.1.x. Drop-in upgrade from v1.1.5.
-
-## v1.1.5 -- Help-menu polish + LGPL compliance + bundled user guide (2026-05-08)
-
-Quality release on top of v1.1.4. No functional changes to the
-RF / decode / wire paths.
-
-New Help menu (View menu joined by Help):
-  - Help -> User Guide (F1): opens the bundled beta-tester guide
-    PDF in the system PDF reader.
-  - Help -> About Qt: standard Qt LGPLv3 attribution dialog.
-
-LGPL compliance polish:
-  - Beta-tester guide PDF now ships with each installer.
-  - Full text of LGPL-3.0 (Qt 6) and LGPL-2.1 (SoXR / libusb)
-    ship in the install dir at Licenses/.
-  - THIRD_PARTY_LICENSES.md gains an explicit source-availability
-    section pointing at the per-bridge repos and upstream URLs.
-
-Drop-in upgrade from v1.1.4.
-
-## v1.1.4 — DC blocker user-enableable on RF-direct receivers (2026-05-07)
-
-The DC blocker checkbox is now editable on RF-direct receivers
-(HackRF / RTL-SDR / SDRplay / Pluto / AirSpy) — previously locked
-greyed-out as of v1.1.3. Default state is unchanged (OFF on
-RF-direct, ON on sound-card sources), so the on-the-bench behaviour
-of a fresh install is identical. Diagnostic scenarios that want
-the software IIR HP back on can now toggle it from Settings without
-an INI edit.
-
-Sound-card-IQ sources (FunCube Pro+ V2, FlexRadio DAX-IQ, Malachite
-via iq-rx-bridge): unchanged.
-
-Drop-in upgrade from v1.1.3.
-
-## v1.1.3 — DC blocker default-off for RF-direct receivers (2026-05-06)
-
-DC blocker is now default-OFF for RF-direct receivers (HackRF /
-RTL-SDR / SDRplay / Pluto / AirSpy) and grayed out in Settings.
-Their hardware DC correction at the SDR API level (and SDRplay's
-Low-IF NCO chain in particular) handles the chip's residual offset
-upstream; the v1.1.2 software IIR HP was redundant for these radios
-and produced a small spike at QMAP centre on the SDRplay Low-IF
-path (G3WDG bench report 2026-05-06).
-
-Sound-card-IQ sources (FunCube Pro+ V2, FlexRadio DAX-IQ, Malachite
-via iq-rx-bridge) keep the DC blocker default-ON: they have no
-hardware DC mitigation, the LO leakage is real, and the IIR HP
-is the only thing notching it out.
-
-INI key linrad/dc_block_enabled is unchanged; existing INIs keep
-their stored value. Only the first-launch default flips per device.
-
-Drop-in upgrade from v1.1.2.
-
-## v1.1.2 — DC blocker for zero-IF receivers (2026-05-05)
-
-DC blocker for zero-IF receivers, removes the LO-leakage spike that
-FunCube Pro+ V2 / HackRF / RTL-SDR / Pluto / AirSpy leak at the centre
-of the spectrum. Per-sample IIR high-pass at the front of both the
-on-screen waterfall (FftEngine) and the QMAP wire path (LinradServer);
-cutoff = 100 Hz, well below any audio offset Q65 / FT8 cares about.
-
-Toggle in Settings → "DC blocker (zero-IF spike removal)", default ON.
-Toggling on also resets the I/Q balance EMA so a stale DC accumulator
-from earlier samples doesn't keep subtracting against now-DC-free
-input for ~2 s.
-
-Drop-in upgrade from v1.1.1. INI key linrad/dc_block_enabled added
-(default true; honours the previous behaviour for anyone who never
-opens Settings).
-
-## v1.1.1 — capability-gated IQ rate combo (2026-05-05)
-
-Tightens the IQ-rate combo. Internally adds a per-device capability
-list; only sound-card-IQ devices currently restrict their offered
-rates -- RF-side bridges (HackRF / RTL-SDR / SDRplay / Pluto / AirSpy)
-are unchanged in behaviour and still offer 96 / 128 / 192 / 256 kHz.
-
-Drop-in upgrade from v1.1.0. No INI changes.
-
-## v1.1.0 — UI refresh: fixed window, Settings menu, Linrad rate readout (2026-05-05)
-
-User-visible polish across the bridge UI; no behavioural changes on
-the wire (96 kHz IQ format unchanged).
-
-- **Fixed-size 400x640 main window**. Replaces the freely-resizable
-  640x540 minimum. Window opens identically every session and
-  doesn't drift; conditional banners (manual-freq override,
-  transverter IF readout) word-wrap rather than clip.
-- **Settings is a top-level menu** in the menu bar (shortcut
-  `Ctrl+,`) -- was a button at the bottom of the State group. Frees
-  ~40 px of vertical real estate for the waterfall.
-- **Linrad rate readout** in the State grid, between the device row
-  and RX status. Reads the active LinradServer output rate; matches
-  what's persisted in the INI.
-- **Settings dialog reflow**: radio gain panel and bridge-wide
-  group sit horizontally side-by-side. Was vertical, ran past the
-  bottom of 1080p laptops with the deeper panels.
-- **New "Linrad IQ rate" combo** in the Settings dialog. Defaults
-  to "96 kHz (QMAP Default)" -- same wire format as before; matches
-  every shipped QMAP release.
-- UDP data port (`50004`) and Linrad host (`127.0.0.1`) /
-  TCP port (`49812`) editors gained tooltips explaining their use
-  in multi-instance setups.
-
-INI compatible with v1.0.x. Drop-in upgrade.
+Drop-in upgrade from v1.2.7. INI compatible.
 
 ## v1.0.2 — bridge-core CatServer fixes (2026-05-04)
 
