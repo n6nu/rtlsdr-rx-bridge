@@ -1,5 +1,55 @@
 # RTL-SDR RX Bridge — Release Notes
 
+## v1.2.10 — R820T per-stage gain (LNA / Mixer / VGA) via old-dab fork (2026-05-27)
+
+**Switched librtlsdr from osmocom upstream to the old-dab/rtlsdr fork.**
+The vcpkg port at `ports/rtlsdr/` was repointed to old-dab commit
+`985786d` with inline patches (`vcpkg_replace_string`) for MSVC build
+compatibility (Threads → PThreads4W, `include_directories(if(...))`
+syntax fix, GCC link flags → `.lib` names).
+
+**New gain controls in the Settings dialog:**
+- **R820T LNA** dropdown (reg 0x05, 16 steps + Auto)
+- **R820T Mixer** dropdown (reg 0x07, 16 steps + Auto)
+- **R820T VGA / IF** dropdown (reg 0x0c, 16 steps + Auto)
+
+Persisted to QSettings keys `rtlsdr/r820t_{lna,mixer,vga}_gain_idx`.
+"Auto" leaves the stage at whatever the composite "Tuner gain" wrote.
+Greyed out when Tuner auto gain is on (chip-internal AGC would
+overwrite the register pokes). Wired live — every dropdown change
+writes the R820T register immediately via the old-dab API
+`rtlsdr_set_tuner_i2c_register`.
+
+**Detected device** header in Settings shows what librtlsdr saw at
+open time (e.g. "Generic RTL2832U OEM — tuner Rafael Micro R820T —
+SN 00000001"). Helps identify which dongle is active in multi-dongle
+setups.
+
+**DS-exit gain reapply:** when crossing the 25 MHz boundary with
+auto-Q-channel on, the bridge now re-applies the saved tuner gain
+after `rtlsdr_set_direct_sampling(0)` so the spinner setting still
+takes effect at VHF/UHF (librtlsdr resets tuner gain mode to auto
+on DS-mode exit).
+
+## v1.2.9 — TCI parked, CW Skimmer parked, stable WSJT-X UDP + CAT path (2026-05-27)
+
+**TCI WebSocket server temporarily disabled.** Bench testing against
+WSJT-X-improved (Rig split, FT8 ↔ FT4 switching) surfaced a
+m_freqNominal oscillation inside WSJT-X that the bridge could not
+resolve from its side without modifying WSJT-X further. Rather than
+ship a partly-working TCI, the server is force-disabled in this
+release: the QSettings `tci/enabled` key is ignored at startup
+(treated as `false`), and the TCI row in Settings is hidden. Work
+continues on the `TCIdevelopment` branch — re-enable by building
+that branch or by passing `--tci-port 40001` on the CLI.
+
+**CW Skimmer UI hidden** (also a work-in-progress; CLI `--cw` and
+INI `cw/enabled=true` still work for opt-in).
+
+**No other functional changes vs v1.2.8.** Full WSJT-X UDP-driven
+freq/mode + rigctld-compatible CAT server still ship as in v1.2.8;
+Linrad wideband UDP to QMAP unchanged.
+
 ## v1.2.8 — RTL-SDR live controls + Linrad bandwidth combo + CAT/TCI (2026-05-26)
 
 Re-aligns the version number with the public 1.2.x release line (was

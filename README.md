@@ -17,9 +17,49 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ---
 
-## Latest release -- v1.2.8
+## Latest release -- v1.2.10
 
-Download: **[rtlsdr-rx-bridge-1.2.8-setup.exe](https://github.com/n6nu/rtlsdr-rx-bridge/releases/latest/download/rtlsdr-rx-bridge-1.2.8-setup.exe)**
+Download: **[rtlsdr-rx-bridge-1.2.10-setup.exe](https://github.com/n6nu/rtlsdr-rx-bridge/releases/latest/download/rtlsdr-rx-bridge-1.2.10-setup.exe)**
+
+What's new in v1.2.10 (2026-05-27) -- **R820T per-stage gain
+control**: separate dropdowns for **LNA** (reg 0x05), **Mixer**
+(reg 0x07), and **VGA / IF** (reg 0x0c), each with 16 discrete
+steps (00..15) plus an "Auto" position. The single composite
+Tuner gain spinner that produced "wrong-value" snap-back is gone
+— you now drive each R820T stage directly. Wired live: every
+dropdown change writes the chip register immediately and persists
+to QSettings. Greyed out when **Hardware AGC** is on (chip-internal
+AGC overrides per-stage values in that mode). Powered by the
+[old-dab/rtlsdr](https://github.com/old-dab/rtlsdr) librtlsdr fork
+(pinned to commit `985786d`), shipped via a `vcpkg-overlays/rtlsdr/`
+portfile in the source repo — see source repo
+`vcpkg-overlays/README.md` for build instructions.
+
+Also new: **Detected device** header in Settings shows the
+manufacturer / model / tuner chip / USB serial that librtlsdr saw at
+open time (helps identify which dongle is active in multi-dongle
+setups), and the **DS-exit gain reapply** — when auto-Q-Channel
+toggles direct-sampling off at the 25 MHz boundary, the bridge now
+re-applies your saved gain settings so the tuner gain actually takes
+effect at VHF/UHF (librtlsdr resets gain to auto on DS exit).
+
+Rolled up from v1.2.9 (not separately published): TCI WebSocket
+server temporarily disabled in the binary — bench testing surfaced
+a WSJT-X-internal m_freqNominal oscillation we couldn't resolve
+without modifying WSJT-X. Work continues on the
+`TCIdevelopment` branch in the source repo. CW Skimmer UI hidden
+(also WIP). CAT setup row deduplicated (the duplicate "CAT server"
++ "CAT port" rows in the RTL settings panel were removed; the
+shared remote-control rows remain) and the CAT-port-key mismatch
+that prevented Settings port changes from taking effect on next
+launch was fixed.
+
+INI compatible with v1.2.8. Drop-in upgrade.
+
+---
+### Previous release — v1.2.8
+
+Download: **[rtlsdr-rx-bridge-1.2.8-setup.exe](https://github.com/n6nu/rtlsdr-rx-bridge/releases/download/v1.2.8/rtlsdr-rx-bridge-1.2.8-setup.exe)**
 
 What's new in v1.2.8 (2026-05-26) -- RTL-SDR live controls (every
 Settings click / spin / slider applies immediately to the running
