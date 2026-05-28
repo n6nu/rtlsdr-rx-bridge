@@ -1,5 +1,57 @@
 # RTL-SDR RX Bridge — Release Notes
 
+## v1.2.11 — UX polish + low-latency USB buffer option (2026-05-27)
+
+Bench-testing v1.2.10 surfaced several rough edges in the new gain UI;
+this release cleans them up and adds a latency-vs-stability switch.
+
+**Per-stage R820T gain dropdowns** (Mixer + VGA) now show **dB values
+directly** instead of register indices (e.g. "11.9 dB" instead of "08").
+LNA per-stage dropdown removed — bench-verified that direct register
+0x05 pokes have no effect on signal level (the chip keeps LNA under
+internal-AGC control regardless of bit-7 / bit-4 state). The remaining
+~70 dB range from Mixer + VGA in series is plenty for normal use.
+
+**"Tuner AGC" checkbox** (was "VGA AGC" then "Hardware AGC") — relabel
+explains that LNA is always under chip-internal AGC; this toggle only
+controls the VGA-stage AGC bit. Mixer dropdown no longer greys when
+Tuner AGC is on (Mixer is always manual on R820T).
+
+**Direct-sampling-aware greying** — when the bridge is in DS mode
+(HF below 25 MHz with auto-Q-channel armed, or manual DS), the
+Tuner AGC / Mixer / VGA widgets grey out automatically because the
+R820T tuner is bypassed in DS mode. A 1 Hz QTimer in the Settings
+panel keeps this in sync with WSJT-X-driven QSYs across the 25 MHz
+boundary.
+
+**Main-window State group reworked:**
+- "Gains:" row replaced with a simpler **"Mode:"** row showing
+  "Tuner" / "Direct Sample I-Channel" / "Direct Sample Q-Channel".
+- TCI / CW status indicator rows removed (both features are parked).
+- Window default size narrowed from 640 × 540 to 430 × 660 — fits
+  better next to WSJT-X without overlap.
+
+**New Settings option: "Low-latency USB buffer"** (under PPM correction).
+Shrinks librtlsdr's async buffer pool from 15 × 16 KB (~470 ms
+pipeline lag at 256 kHz IQ) to 6 × 16 KB (~190 ms). Use for sun-noise
+measurements and antenna peaking (dish alignment) where pipeline lag
+matters. Takes effect on next bridge launch. Higher underrun risk
+under heavy CPU load — default off.
+
+**Settings panel narrowed** + 2-line device-info row.
+
+**Cleanup:**
+- CAT widgets in the RTL-SDR panel deduplicated (the same Enable CAT
+  server / CAT port rows lived in both the shared Settings block and
+  the RTL panel; RTL copy removed).
+- Shared Settings CAT-port key was `cat/port` while main.cpp read
+  `cat/tcp_port` — fixed to `cat/tcp_port` so port changes actually
+  persist across launches.
+- "Detected" device-info row at the top of the RTL-SDR Settings shows
+  manufacturer / tuner chip / USB serial as reported by librtlsdr.
+
+INI compatible with v1.2.10. Drop-in upgrade.
+
 ## v1.2.10 — R820T per-stage gain (LNA / Mixer / VGA) via old-dab fork (2026-05-27)
 
 **Switched librtlsdr from osmocom upstream to the old-dab/rtlsdr fork.**

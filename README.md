@@ -17,44 +17,66 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ---
 
-## Latest release -- v1.2.10
+## Latest release -- v1.2.11
 
-Download: **[rtlsdr-rx-bridge-1.2.10-setup.exe](https://github.com/n6nu/rtlsdr-rx-bridge/releases/latest/download/rtlsdr-rx-bridge-1.2.10-setup.exe)**
+Download: **[rtlsdr-rx-bridge-1.2.11-setup.exe](https://github.com/n6nu/rtlsdr-rx-bridge/releases/latest/download/rtlsdr-rx-bridge-1.2.11-setup.exe)**
 
-What's new in v1.2.10 (2026-05-27) -- **R820T per-stage gain
-control**: separate dropdowns for **LNA** (reg 0x05), **Mixer**
-(reg 0x07), and **VGA / IF** (reg 0x0c), each with 16 discrete
-steps (00..15) plus an "Auto" position. The single composite
-Tuner gain spinner that produced "wrong-value" snap-back is gone
-— you now drive each R820T stage directly. Wired live: every
-dropdown change writes the chip register immediately and persists
-to QSettings. Greyed out when **Hardware AGC** is on (chip-internal
-AGC overrides per-stage values in that mode). Powered by the
+What's new in v1.2.11 (2026-05-27) -- UX polish on top of the v1.2.10
+per-stage-gain release. **R820T Mixer + VGA gain dropdowns now show
+dB values directly** (e.g. "11.9 dB" instead of register index "08").
+The LNA per-stage dropdown was bench-verified inop and dropped --
+the chip keeps the LNA stage under its internal AGC regardless of
+what we write to register 0x05, so we don't pretend to control it.
+Mixer + VGA in series give ~70 dB of usable manual range.
+
+**"Tuner AGC" checkbox** scope clarified -- it only governs the
+VGA-stage AGC bit on R820T. LNA is always under chip-internal AGC.
+Mixer is always manual. The Mixer dropdown no longer greys when
+Tuner AGC is on.
+
+**Direct-sampling-aware UI** -- a 1 Hz watcher in the Settings panel
+greys the Mixer / VGA / Tuner-AGC widgets automatically when the
+bridge auto-flips into direct-sampling (HF below 25 MHz with auto-
+Q-channel armed). The R820T is bypassed in DS mode so the gain
+knobs are inert there; the UI now reflects that. When WSJT-X QSYs
+back above 25 MHz the widgets re-enable themselves.
+
+**Main window reworked:** "Gains:" row replaced with a simpler
+**"Mode:"** row showing "Tuner" / "Direct Sample I-Channel" /
+"Direct Sample Q-Channel". Default window size 430 x 660 px (was
+640 x 540) for less overlap with WSJT-X. TCI / CW status indicator
+rows dropped (both features parked for now).
+
+**New: "Low-latency USB buffer" checkbox** (Settings -> RTL-SDR).
+Shrinks the librtlsdr async pool from 15 x 16 KB (~470 ms pipeline
+lag at 256 kHz IQ) to 6 x 16 KB (~190 ms). For sun-noise level
+measurements and antenna dish peaking where pipeline latency matters.
+Takes effect on next launch. Default off.
+
+Cleanup: CAT "Enable server" / port spinbox no longer duplicated
+between the RTL-SDR panel and the shared remote-control block (kept
+only the shared rows). Shared dialog's port key fixed from
+`cat/port` to `cat/tcp_port` so changes persist on next launch.
+The "Detected" device-info row at the top of the RTL-SDR Settings
+shows manufacturer / tuner chip / USB serial that librtlsdr saw at
+open time.
+
+INI compatible with v1.2.10 / v1.2.8. Drop-in upgrade.
+
+---
+### Previous release — v1.2.10
+
+Download: **[rtlsdr-rx-bridge-1.2.10-setup.exe](https://github.com/n6nu/rtlsdr-rx-bridge/releases/download/v1.2.10/rtlsdr-rx-bridge-1.2.10-setup.exe)**
+
+What's new in v1.2.10 (2026-05-27) -- **R820T per-stage gain control**:
+LNA / Mixer / VGA dropdowns, each with 16 discrete steps. (LNA dropdown
+later removed in v1.2.11 -- bench-verified inop on R820T because the
+chip keeps LNA under hardware AGC.) Powered by the
 [old-dab/rtlsdr](https://github.com/old-dab/rtlsdr) librtlsdr fork
-(pinned to commit `985786d`), shipped via a `vcpkg-overlays/rtlsdr/`
-portfile in the source repo — see source repo
-`vcpkg-overlays/README.md` for build instructions.
-
-Also new: **Detected device** header in Settings shows the
-manufacturer / model / tuner chip / USB serial that librtlsdr saw at
-open time (helps identify which dongle is active in multi-dongle
-setups), and the **DS-exit gain reapply** — when auto-Q-Channel
-toggles direct-sampling off at the 25 MHz boundary, the bridge now
-re-applies your saved gain settings so the tuner gain actually takes
-effect at VHF/UHF (librtlsdr resets gain to auto on DS exit).
-
-Rolled up from v1.2.9 (not separately published): TCI WebSocket
-server temporarily disabled in the binary — bench testing surfaced
-a WSJT-X-internal m_freqNominal oscillation we couldn't resolve
-without modifying WSJT-X. Work continues on the
-`TCIdevelopment` branch in the source repo. CW Skimmer UI hidden
-(also WIP). CAT setup row deduplicated (the duplicate "CAT server"
-+ "CAT port" rows in the RTL settings panel were removed; the
-shared remote-control rows remain) and the CAT-port-key mismatch
-that prevented Settings port changes from taking effect on next
-launch was fixed.
-
-INI compatible with v1.2.8. Drop-in upgrade.
+shipped via a `vcpkg-overlays/rtlsdr/` portfile in the source repo.
+Rolled up the parked-TCI / hidden-CW-Skimmer / CAT-key-fix from v1.2.9
+(not separately published). v1.2.11 is recommended over v1.2.10 for
+the cleaner gain UI.
 
 ---
 ### Previous release — v1.2.8
