@@ -19,16 +19,15 @@ Author: **Andreas Junge, N6NU** &lt;<n6nu@arrl.net>&gt;.
 
 ## Current build
 
-V3 is close to release, and the current build is well ahead of the
-published releases below:
+V3 is close to release, and the current build is well ahead of the published
+releases below:
 
-**[rtlsdr-rx-bridge-3.1.7-setup.exe](https://bridges.n6nu.org/beta/rtlsdr-rx-bridge-3.1.7-setup.exe)**
+**[rtlsdr-rx-bridge-3.1.8-setup.exe](https://bridges.n6nu.org/beta/rtlsdr-rx-bridge-3.1.8-setup.exe)**
 
-Prefer it over the releases listed below: every installer up to and including v2.1.1 was packaged without the
-Microsoft Visual C++ runtime, so on a clean Windows machine it starts and
-closes again immediately. Installing the Microsoft Visual C++
-Redistributable cures that. The current build
-bundles the runtime.
+Prefer it over the releases listed below: every installer up to and including
+v2.1.1 was packaged without the Microsoft Visual C++ runtime, so on a clean
+Windows machine it starts and closes again immediately. This build carries the
+runtime with it, along with everything since June.
 
 ---
 
